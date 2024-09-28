@@ -10,8 +10,8 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files from the root directory
+app.use(express.static(__dirname)); // Change this line
 
 // Endpoint to handle form submission
 app.post('/submit', async (req, res) => {
@@ -30,7 +30,7 @@ app.post('/submit', async (req, res) => {
 
 // Serve HTML file
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html')); // Update this line
 });
 
 // Start the server
